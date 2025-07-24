@@ -12,9 +12,9 @@ vim.opt.expandtab = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
-vim.opt.swapfile = true
-vim.opt.backup = true
-vim.opt.undofile = true
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undofile = false
 vim.opt.incsearch = true
 vim.opt.inccommand = "split"
 vim.opt.ignorecase = true
@@ -29,7 +29,6 @@ vim.opt.splitbelow = true
 
 vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
-vim.opt.colorcolumn = "80"
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.hlsearch = true
 vim.opt.mouse = "a"
