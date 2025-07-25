@@ -27,7 +27,7 @@ window#waybar {
     background-color: #111111;
     border-left: 1px solid #330000;
     border-right: 1px solid #330000;
-    padding: 0 8px;
+    padding: 0 12px;
     margin: 0 1px;
 }
 

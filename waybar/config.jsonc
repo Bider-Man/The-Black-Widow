@@ -6,7 +6,6 @@
         "memory",
         "temperature",
         "battery",
-        "battery#bat2",
         "hyprland/window"
     ],
     "modules-center": [
@@ -16,22 +15,21 @@
         "mpd",
         "idle_inhibitor",
         "pulseaudio",
+        "battery",
         "network",
         "power-profiles-daemon",
         "backlight",
         "keyboard-state",
         "hyprland/language",
-        "clock",
-        "tray",
-        "custom/power"
+        "clock"
     ],
     "keyboard-state": {
         "numlock": true,
         "capslock": true,
         "format": "{name} [≡]",
         "format-icons": {
-            "locked": "[🔒]",
-            "unlocked": "[⌨]"
+            "locked": "🔒",
+            "unlocked": "⌨"
         }
     },
     "hyprland/workspaces": {
@@ -40,16 +38,16 @@
             "1": {}, "2": {}, "3": {}, "4": {}, "5": {},
             "6": {}, "7": {}, "8": {}, "9": {}, "10": {}
         },
-        "format": "▏{name}▕",
+        "format": "{name}",
         "format-icons": {
-            "active": "▏{name}▕",
-            "urgent": "▏!{name}▕",
-            "default": "▏{name}▕"
+            "active": "{name}",
+            "urgent": "!{name}",
+            "default": "{name}"
         }
     },
     "hyprland/window": {
         "max-length": 50,
-        "format": "▎ {} ▏"
+        "format": "{}"
     },
     "mpd": {
         "format": "♫ {artist} - {title} ({elapsedTime:%M:%S})",
@@ -77,7 +75,7 @@
         "tooltip": false
     },
     "memory": {
-        "format": "🧠 {}%"
+        "format": "{}%"
     },
     "temperature": {
         "critical-threshold": 80,
@@ -85,7 +83,7 @@
         "format-critical": "🔥 {temperatureC}°C"
     },
     "backlight": {
-        "format": "💡 {percent}%",
+        "format": "{percent}%",
         "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
     },
     "battery": {
@@ -93,17 +91,17 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "🔋 {capacity}%",
-        "format-charging": "⚡ {capacity}%",
-        "format-plugged": "🔌 {capacity}%",
+        "format": "{capacity}%",
+        "format-charging": "{capacity}%",
+        "format-plugged": "{capacity}%",
         "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
     },
     "battery#bat2": {
         "bat": "BAT2",
-        "format": "🔋2 {capacity}%"
+        "format": "{capacity}%"
     },
     "power-profiles-daemon": {
-        "format": "⚡ {icon}",
+        "format": "{icon}",
         "format-icons": {
             "performance": "PWR",
             "balanced": "BAL",
@@ -111,14 +109,14 @@
         }
     },
     "network": {
-        "format-wifi": "📶 {essid}",
-        "format-ethernet": "🔌 {ipaddr}",
-        "format-disconnected": "🚫 NET"
+        "format-wifi": "{essid}",
+        "format-ethernet": "{ipaddr}",
+        "format-disconnected": "NET"
     },
     "pulseaudio": {
-        "format": "🔊 {volume}%",
-        "format-muted": "🔇 MUT",
-        "format-bluetooth": "🖱 {volume}%",
+        "format": "{volume}%",
+        "format-muted": "MUTE",
+        "format-bluetooth": "{volume}%",
         "on-click": "pavucontrol"
     },
     "custom/power": {
