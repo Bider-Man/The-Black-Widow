@@ -1,14 +1,12 @@
 // Import Modules
 import "./modules/bar/"
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Window
+import "./modules/drawers"
+import "./modules/background"
 import Quickshell
 
 // Main Config
 ShellRoot {
-    property bool enableBar: true
-
-    LazyLoader {active: enableBar; component: Bar{}}
+    Background{}
+    Drawers{}
+    Shortcuts{}
 }
