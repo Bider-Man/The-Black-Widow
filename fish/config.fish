@@ -12,7 +12,7 @@ if status is-interactive
 
 end
 
-alias pamcan pacman
+alias pamcan=pacman
 alias clear "printf '\033[2J\033[3J\033[1;1H'"
     
 

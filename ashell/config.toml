@@ -7,11 +7,11 @@ enable_esc_key = true
 [modules]
 left = [ ["AppLauncher", "Updates", "WindowTitle" ] ]
 center = [ "Workspaces", "Clock", "MediaPlayer"]
-right = [ "SystemInfo", [  "Tray", "Privacy", "Settings" ], "KeyboardLayout", "Notifications"]
+right = [ "SystemInfo", [  "Tray", "Privacy", "Settings" ], "BatteryInfo", "KeyboardLayout", "Notifications"]
 
 [updates]
-check_cmd = "checkupdates; paru -Qua"
-update_cmd = 'alacritty -e bash -c "paru; echo Done - Press enter to exit; read" &'
+check_cmd = "checkupdates; yay -Qua"
+update_cmd = 'alacritty -e bash -c "yay; echo Done - Press enter to exit; read" &'
 
 [workspaces]
 max_workspaces = 10
@@ -54,7 +54,7 @@ alert_threshold = 90
 "Duestch (GER)" = "🇩🇪"
 
 [clock]
-format = "%c"
+format = "%a %d %b %Y %r"
 
 [media_player]
 max_title_length = 50
