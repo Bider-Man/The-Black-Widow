@@ -17,10 +17,11 @@ Scope{
         model: Quickshell.screens
 
         PanelWindow{
-            id: root
-            visible: content.length > 0
+            id: panel
             required property var modelData
             screen: modelData
+            implicitHeight: 30
+            implicitWidth: screen.width
 
             color: "gray"
 
@@ -30,24 +31,31 @@ Scope{
                 right: true
             }
 
-            implicitHeight: 30
-
-            Row{
-                id: contentRow
-                anchors.fill: parent
-                spacing: 10
-
-                // Left side widgets
-
-                // Center widgets
-                Clock{
-                    anchors.centerIn: parent
+            LeftBar{
+                anchors{
+                    top: parent.top
+                    topMargin: qs.modules.common.Config.bar.topMargin
+                    left: parent.left
+                    LeftMargin: Config.bar.sideMargin
                 }
-
-                //Right side widgets
-                Battery{}
+            }
+            
+            MidBar{
+                anchors{
+                    top: parent.top
+                    topMargin: qs.modules.common.Config.bar.topMargin
+                    horizontalCenter: parent.horizontalCenter
+                }
             }
 
+            RightBar{
+                anchors{
+                    top: parent.top
+                    topMargin: qs.modules.common.Config.bar.topMargin
+                    right:  parent.right
+                    rightMargin: Config.bar.sideMargin
+                }
+            }
         }
     }
 }
