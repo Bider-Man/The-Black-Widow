@@ -1,0 +1,12 @@
+[Unit]
+Description = Widow Shell Service
+BindsTo = graphical-session.target
+After = graphical-session.target
+
+[Service]
+ExecStart = qs -c widow
+Restart = on-failure
+RestartSec = 1
+
+[Install]
+WantedBy = graphical-session.target
