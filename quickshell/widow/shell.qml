@@ -8,6 +8,9 @@ import Quickshell.Services.UPower
 import "./modules/bar"
 
 // Main Config
-Scope{
+ShellRoot{
+    id: root
+
     Bar{}
+    ReloadPopup{}
 }
