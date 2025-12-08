@@ -42,5 +42,6 @@ PanelWindow{
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
         }
+
     }
 }

@@ -8,7 +8,6 @@ import Quickshell.Services.UPower
 
 // Import User folders
 import "./modules/bar/"
-import "./modules/notifications/"
 import "./services/"
 
 // Main Config
