@@ -12,25 +12,35 @@ PanelWindow{
     implicitHeight: 30
     color: "#1a1b26"
 
-    RowLayout{
+    Item {
         anchors.fill: parent
-        spacing: 10
         
-        Item{Layout.preferredWidth: 15} // Pushes the widgets a few pixels to the right
-
-        // CPU, Memory and Swap Info
-        Utils{}
-
-        Item{Layout.fillWidth: true} // Pushes the Widgets to the left
-
-        // Workspace Info
-        Workspaces{}
-
-        Item{Layout.fillWidth: true}
-
-        // Clock Info
-        Clock{}
-
-        Item{Layout.fillWidth: true}
+        // Left-aligned Utils
+        Utils {
+            anchors.left: parent.left
+            anchors.leftMargin: 15
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        
+        // Workspaces centered
+        Workspaces {
+            id: workspaces
+            anchors.centerIn: parent
+        }
+        
+        // Clock to the right of Workspaces
+        Clock {
+            id: clock
+            anchors.left: workspaces.right
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        
+        // Battery to the right of Clock
+        Battery {
+            anchors.left: clock.right
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
 }

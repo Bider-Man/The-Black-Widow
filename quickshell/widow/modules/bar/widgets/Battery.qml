@@ -1,13 +1,13 @@
 // Import Modules
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Services.UPower
 
 // Main Config
-RowLayout{
+RowLayout {
     id: batteryWidget
     spacing: 5
-
-    // Battery Constants
-    property var battery: UPower.displayDevice
+    Layout.alignment: Qt.AlignVCenter
+    
+    // Use the system command version instead of UPower
+    BatterySystem {}
 }

@@ -3,10 +3,10 @@ import QtQuick
 
 // Main config
 
-Item{
+Item {
     id: root
-    width: 475
     height: 23
+    width: clock.contentWidth + 20  // Dynamic width based on content
     
     // Theme
     property color colRed: "#c84c4c"   // Medium red
@@ -14,13 +14,14 @@ Item{
     property int fontSize: 17
 
     // Clock
-    Text{
+    Text {
         id: clock
+        anchors.centerIn: parent
         color: root.colRed
-        font{family: root.fontFamily; pixelSize: root.fontSize; bold: true}
+        font { family: root.fontFamily; pixelSize: root.fontSize; bold: true }
         text: Qt.formatDateTime(new Date(), "ddd, MMM dd - HH:mm:ss")
 
-        Timer{
+        Timer {
             interval: 1000
             running: true
             repeat: true
