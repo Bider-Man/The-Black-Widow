@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Wayland
+import qs.common as Common
 
 // Main Config
 Scope {
@@ -19,30 +20,30 @@ Scope {
     property int errorDuration: 10000
     property int popupDuration: failed ? errorDuration : successDuration
     
-    // Color properties
-    property color successBg: "#ffD1E8D5"
-    property color successText: "#ff0C1F13"
-    property color successBar: successText
-    property color successBarBg: "#4027643e"
+    // Use theme colors
+    readonly property color successBg: Common.Appearance.colors.colSuccessContainer
+    readonly property color successText: Common.Appearance.colors.colOnSuccessContainer
+    readonly property color successBar: successText
+    readonly property color successBarBg: Common.Appearance.colors.colOutlineVariant
     
-    property color errorBg: "#ffe99195"
-    property color errorText: "#ff93000A"
-    property color errorBar: errorText
-    property color errorBarBg: "#30af1b25"
+    readonly property color errorBg: Common.Appearance.colors.colErrorContainer
+    readonly property color errorText: Common.Appearance.colors.colOnErrorContainer
+    readonly property color errorBar: errorText
+    readonly property color errorBarBg: Common.Appearance.colors.colOutlineVariant
     
     // Layout properties
-    property int horizontalPadding: 15
-    property int verticalPadding: 15
-    property int barHeight: 5
-    property int barMargin: 10
-    property int borderRadius: 12
-    property int shadowRadius: 8
+    readonly property int horizontalPadding: 15
+    readonly property int verticalPadding: 15
+    readonly property int barHeight: 5
+    readonly property int barMargin: 10
+    readonly property int borderRadius: Common.Appearance.rounding.small
+    readonly property int shadowRadius: 8
     
     // Font properties
-    property string fontFamily: "JetBrainsMono Nerd Font"
-    property int titleFontSize: 14
-    property int messageFontSize: 11
-    
+    readonly property string fontFamily: Common.Appearance.font.family.main
+    readonly property int titleFontSize: Common.Appearance.font.pixelSize.small
+    readonly property int messageFontSize: Common.Appearance.font.pixelSize.smaller
+
     // Connect to the Quickshell global to listen for the reload signals.
     Connections {
         target: Quickshell
@@ -71,9 +72,9 @@ Scope {
         
         // Position at top center
         anchors.top: true
-        width: rect.width + shadow.radius * 2
-        height: rect.height + shadow.radius * 2
-        margins.top: 30 // Add some margin from top
+        implicitWidth: rect.width + shadow.radius * 2
+        implicitHeight: rect.height + shadow.radius * 2
+        margins.top: 30
 
         WlrLayershell.namespace: "quickshell:reloadPopup"
         WlrLayershell.layer: WlrLayershell.Layer.Top
@@ -179,7 +180,7 @@ Scope {
             verticalOffset: 2
             radius: shadowRadius
             samples: shadowRadius * 2 + 1
-            color: "#40000000"
+            color: Common.Appearance.colors.colShadow
             source: rect
         }
     }

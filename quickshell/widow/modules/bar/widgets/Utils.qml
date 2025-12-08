@@ -2,21 +2,21 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
+import qs.common as Common
 
 // Main Config
 RowLayout {
     id: root
     spacing: 10
 
-    // Theme 
-    property color colBg: "#0a0a0a"       // Near-black
-    property color colFg: "#f5f5f5"       // Off-white
-    property color colMuted: "#4a4a4a"    // Dark gray
-    property color colBrick: "#b22222"    // Firebrick red
-    property color colRed: "#c84c4c"      // Medium red
-    property color colBrown: "#996515"    // Dark brown
-    property string fontFamily: "JetBrainsMono Nerd Font"
-    property int fontSize: 14
+    // Use theme colors instead of hardcoded values
+    readonly property color colBg: Common.Appearance.colors.colLayer0
+    readonly property color colFg: Common.Appearance.colors.colOnLayer0
+    readonly property color colMuted: Common.Appearance.colors.colOutlineVariant
+    readonly property color colCpu: Common.Appearance.m3colors.m3secondary  // Brown for CPU
+    readonly property color colMemory: Common.Appearance.m3colors.m3primary  // Red for memory
+    readonly property string fontFamily: Common.Appearance.font.family.main
+    readonly property int fontSize: Common.Appearance.font.pixelSize.smaller
 
     // System Properties Data
     property int memUsage: 0
@@ -109,46 +109,69 @@ RowLayout {
     }
 
     Timer {
-        interval: 2000  // Update every 2 seconds (better for CPU calculation)
+        interval: 2000
         running: true
         repeat: true
         onTriggered: {
-            // Restart processes to get fresh data
             cpuProc.running = true
             memProc.running = true
             swaProc.running = true
         }
     }
 
+    // Separator before CPU
+    Rectangle { 
+        width: 1
+        height: 16
+        color: colMuted 
+        Layout.alignment: Qt.AlignVCenter
+    }
+
     // Display components
     Text {
         text: "CPU: " + cpuUsage + "%"
-        color: root.colBrown
-        font { family: root.fontFamily; pixelSize: root.fontSize; bold: true }
+        color: colCpu
+        font { 
+            family: fontFamily
+            pixelSize: fontSize
+            bold: true 
+        }
         Layout.alignment: Qt.AlignVCenter
     }
 
     Rectangle { 
-        width: 1; height: 16; color: root.colMuted 
+        width: 1
+        height: 16
+        color: colMuted 
         Layout.alignment: Qt.AlignVCenter
     }
     
     Text {
         text: "Mem: " + memUsage + "%"
-        color: root.colBrick
-        font { family: root.fontFamily; pixelSize: root.fontSize; bold: true }
+        color: colMemory
+        font { 
+            family: fontFamily
+            pixelSize: fontSize
+            bold: true 
+        }
         Layout.alignment: Qt.AlignVCenter
     }
 
     Rectangle { 
-        width: 1; height: 16; color: root.colMuted 
+        width: 1
+        height: 16
+        color: colMuted 
         Layout.alignment: Qt.AlignVCenter
     }
 
     Text {
         text: "Swap: " + swaUsage + "%"
-        color: root.colBrick
-        font { family: root.fontFamily; pixelSize: root.fontSize; bold: true }
+        color: colMemory
+        font { 
+            family: fontFamily
+            pixelSize: fontSize
+            bold: true 
+        }
         Layout.alignment: Qt.AlignVCenter
     }
 }

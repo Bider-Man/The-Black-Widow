@@ -2,41 +2,39 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
+import qs.common as Common
 
 // Main Config
 Item {
     id: batteryCircle
     
-    // =========== CONFIGURATION CONSTANTS ===========
-    
-    // Layout properties
+    // =========== LAYOUT PROPERTIES ===========
     readonly property int _size: 30
     readonly property int _lineWidth: 3
     readonly property int _outerRadius: (_size / 2) - _lineWidth
     readonly property int _indicatorRadius: 2
     
-    // Color palette
-    readonly property color _colorNoBattery: "#444b6a"   // Gray
-    readonly property color _colorCharging: "#0db9d7"    // Cyan
-    readonly property color _colorHigh: "#9ece6a"        // Green (>60%)
-    readonly property color _colorMedium: "#e0af68"      // Yellow (20-60%)
-    readonly property color _colorLow: "#c84c4c"         // Red (<20%)
-    readonly property color _colorBackground: "#444b6a"  // Circle background
+    // =========== THEME COLORS ===========
+    readonly property color _colorNoBattery: Common.Appearance.colors.colOutlineVariant
+    readonly property color _colorCharging: Common.Appearance.colors.colPrimary
+    readonly property color _colorHigh: Common.Appearance.m3colors.term2
+    readonly property color _colorMedium: Common.Appearance.m3colors.term3
+    readonly property color _colorLow: Common.Appearance.colors.colError
+    readonly property color _colorBackground: Common.Appearance.colors.colSurfaceContainer
     
-    // Text properties
-    readonly property string _fontFamily: "JetBrainsMono Nerd Font"
-    readonly property int _fontSize: 10
+    // =========== TEXT PROPERTIES ===========
+    readonly property string _fontFamily: Common.Appearance.font.family.main
+    readonly property int _fontSize: Common.Appearance.font.pixelSize.smallest
     
-    // Paths for system files (configurable per system)
+    // =========== SYSTEM PATHS ===========
     readonly property string _acOnlinePath: "/sys/class/power_supply/AC/online"
     readonly property string _capacityPath: "/sys/class/power_supply/BAT*/capacity"
     readonly property string _statusPath: "/sys/class/power_supply/BAT*/status"
     
-    // Update interval in milliseconds
+    // =========== UPDATE INTERVAL ===========
     readonly property int _updateInterval: 2000
     
     // =========== STATE PROPERTIES ===========
-    
     implicitWidth: _size
     implicitHeight: _size
     Layout.alignment: Qt.AlignVCenter
@@ -46,7 +44,6 @@ Item {
     property bool acConnected: false
     
     // =========== COLOR CALCULATION ===========
-    
     readonly property color circleColor: {
         if (percentage === 0) return _colorNoBattery
         
@@ -63,7 +60,6 @@ Item {
         Math.round(percentage) + "%" : "N/A"
     
     // =========== SYSTEM DATA FETCHING ===========
-    
     Process {
         id: acProc
         command: ["sh", "-c", `cat ${_acOnlinePath} 2>/dev/null || echo 0`]
@@ -110,7 +106,6 @@ Item {
     }
     
     // =========== CANVAS DRAWING ===========
-    
     Canvas {
         id: canvas
         anchors.fill: parent
@@ -148,7 +143,7 @@ Item {
         
         // Helper function: Draw battery arc
         function drawBatteryArc(ctx, centerX, centerY) {
-            var startAngle = -Math.PI / 2  // Start at top
+            var startAngle = -Math.PI / 2
             var endAngle = startAngle + (percentage / 100) * Math.PI * 2
             
             ctx.beginPath()
@@ -169,7 +164,6 @@ Item {
     }
     
     // =========== PERCENTAGE TEXT ===========
-    
     Text {
         anchors.centerIn: parent
         text: displayText

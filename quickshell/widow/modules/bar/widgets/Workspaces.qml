@@ -4,6 +4,7 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
+import qs.common as Common
 
 // Main Config
 RowLayout{
@@ -18,8 +19,20 @@ RowLayout{
             property var ws: Hyprland.workspaces.values.find(w => w.id === index + 1)
             property bool isActive: Hyprland.focusedWorkspace?.id === (index + 1)
             text: index + 1
-            color: isActive ? "#0db9d7" : (ws ? "#7aa2f7" : "#444b6a")
-            font{pixelSize: 17; bold: true}
+            color: {
+                if (isActive) {
+                    return Common.Appearance.m3colors.workspaceActive
+                } else if (ws) {
+                    return Common.Appearance.m3colors.workspaceInactive
+                } else {
+                    return Common.Appearance.m3colors.workspaceEmpty
+                }
+            }
+            font {
+                pixelSize: Common.Appearance.font.pixelSize.large
+                bold: true
+                family: Common.Appearance.font.family.main
+            }
 
             MouseArea{
                 anchors.fill: parent

@@ -3,14 +3,15 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import qs.modules.bar.widgets
+import "../../common/" as Common
 
 // Main Config
 PanelWindow{
     anchors.top: true
     anchors.left: true
     anchors.right: true
-    implicitHeight: 30
-    color: "#1a1b26"
+    implicitHeight: Common.Appearance.sizes.barHeight
+    color: Common.Appearance.colors.colLayer0
 
     Item {
         anchors.fill: parent

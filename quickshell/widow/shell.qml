@@ -8,7 +8,6 @@ import Quickshell.Services.UPower
 
 // Import User folders
 import "./modules/bar/"
-import "./services/"
 
 // Main Config
 ShellRoot{
