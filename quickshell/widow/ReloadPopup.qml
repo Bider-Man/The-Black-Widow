@@ -5,179 +5,156 @@ import Quickshell
 import Quickshell.Wayland
 
 Scope {
-    id: root
-    
-    property bool failed: false
-    property string errorString: ""
-    property bool showPopup: false
-    
-    property int successDuration: 1000
-    property int errorDuration: 10000
-    property int popupDuration: failed ? errorDuration : successDuration
-    
-    // Hardcoded Black Widow colors
-    readonly property color successBg: "#2c1a0a"        // Dark brown
-    readonly property color successText: "#e6d5c3"      // Light cream
-    readonly property color successBar: successText
-    readonly property color successBarBg: "#4a433c"     // Dark brown
-    
-    readonly property color errorBg: "#410002"          // Very dark red
-    readonly property color errorText: "#ffdad6"        // Light pink
-    readonly property color errorBar: errorText
-    readonly property color errorBarBg: "#4a433c"       // Dark brown
-    
-    readonly property int horizontalPadding: 15
-    readonly property int verticalPadding: 15
-    readonly property int barHeight: 5
-    readonly property int barMargin: 10
-    readonly property int borderRadius: 12
-    readonly property int shadowRadius: 8
-    
-    readonly property string fontFamily: "JetBrainsMono Nerd Font"
-    readonly property int titleFontSize: 14
-    readonly property int messageFontSize: 11
+	id: root
+	property bool failed;
+	property string errorString;
 
-    Connections {
-        target: Quickshell
+	// Connect to the Quickshell global to listen for the reload signals.
+	Connections {
+		target: Quickshell
 
-        function onReloadCompleted() {
-            Quickshell.inhibitReloadPopup();
-            root.failed = false;
-            root.errorString = "";
-            root.showPopup = true;
-            hideTimer.restart();
-        }
+		function onReloadCompleted() {
+			root.failed = false;
+			popupLoader.loading = true;
+		}
 
-        function onReloadFailed(error: string) {
-            Quickshell.inhibitReloadPopup();
-            root.failed = true;
-            root.errorString = error;
-            root.showPopup = true;
-            hideTimer.restart();
-        }
-    }
+		function onReloadFailed(error: string) {
+			// Close any existing popup before making a new one.
+			popupLoader.active = false;
 
-    PanelWindow {
-        id: popupWindow
-        visible: root.showPopup
-        exclusiveZone: 0
-        
-        anchors.top: true
-        implicitWidth: rect.width + shadow.radius * 2
-        implicitHeight: rect.height + shadow.radius * 2
-        margins.top: 30
+			root.failed = true;
+			root.errorString = error;
+			popupLoader.loading = true;
+		}
+	}
 
-        WlrLayershell.namespace: "quickshell:reloadPopup"
-        WlrLayershell.layer: WlrLayershell.Layer.Top
-        WlrLayershell.anchors: Quickshell.Wayland.WlrLayershell.Anchor.Top | Quickshell.Wayland.WlrLayershell.Anchor.Horizontal
-        color: "transparent"
+	// Keep the popup in a loader because it isn't needed most of the time
+	LazyLoader {
+		id: popupLoader
 
-        Rectangle {
-            id: rect
-            anchors.centerIn: parent
-            color: root.failed ? errorBg : successBg
-            width: layout.width + horizontalPadding * 2
-            height: layout.height + verticalPadding * 2 + (barBg.visible ? barMargin + barHeight : 0)
-            radius: borderRadius
+		PanelWindow {
+			id: popup
 
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                onClicked: {
-                    root.showPopup = false;
-                    hideTimer.stop();
-                }
+			exclusiveZone: 0
+			anchors.top: true
+			margins.top: 0
+
+			implicitWidth: rect.width + shadow.radius * 2
+			implicitHeight: rect.height + shadow.radius * 2
+
+			WlrLayershell.namespace: "quickshell:reloadPopup"
+
+			// color blending is a bit odd as detailed in the type reference.
+			color: "transparent"
+
+			Rectangle {
+				id: rect
+				anchors.centerIn: parent
+				color: failed ?  "#ffe99195" : "#ffD1E8D5"
+
+				implicitHeight: layout.implicitHeight + 30
+				implicitWidth: layout.implicitWidth + 30
+				radius: 12
+
+				// Fills the whole area of the rectangle, making any clicks go to it,
+				// which dismiss the popup.
+				MouseArea {
+					id: mouseArea
+					anchors.fill: parent
+					onPressed: {
+						popupLoader.active = false
+					}
+
+					// makes the mouse area track mouse hovering, so the hide animation
+					// can be paused when hovering.
+					hoverEnabled: true
+				}
+
+				ColumnLayout {
+					id: layout
+					spacing: 10
+					anchors {
+						top: parent.top
+						topMargin: 10
+						horizontalCenter: parent.horizontalCenter
+					}
+
+					Text {
+						renderType: Text.NativeRendering
+						font.family: "Google Sans Flex"
+						font.pointSize: 14
+						text: root.failed ? "Quickshell: Reload failed" : "Quickshell reloaded"
+						color: failed ? "#ff93000A" : "#ff0C1F13"
+					}
+
+					Text {
+						renderType: Text.NativeRendering
+						font.family: "JetBrains Mono NF"
+						font.pointSize: 11
+						text: root.errorString
+						color: failed ? "#ff93000A" : "#ff0C1F13"
+						// When visible is false, it also takes up no space.
+						visible: root.errorString != ""
+					}
+				}
+
+				// A progress bar on the bottom of the screen, showing how long until the
+				// popup is removed.
+				Rectangle {
+					z: 2
+					id: bar
+					color: failed ? "#ff93000A" : "#ff0C1F13"
+					anchors.bottom: parent.bottom
+					anchors.left: parent.left
+					anchors.margins: 10
+					height: 5
+					radius: 9999
+
+					PropertyAnimation {
+						id: anim
+						target: bar
+						property: "width"
+						from: rect.width - bar.anchors.margins * 2
+						to: 0
+						duration: failed ? 10000 : 1000
+						onFinished: popupLoader.active = false
+
+						// Pause the animation when the mouse is hovering over the popup,
+						// so it stays onscreen while reading. This updates reactively
+						// when the mouse moves on and off the popup.
+						paused: mouseArea.containsMouse
+					}
+				}
+				// Its bg
+				Rectangle {
+					z: 1
+					id: bar_bg
+					color: failed ? "#30af1b25" : "#4027643e"
+					anchors.bottom: parent.bottom
+					anchors.left: parent.left
+					anchors.margins: 10
+					height: 5
+					radius: 9999
+					width: rect.width - bar.anchors.margins * 2
+				}
+
+				// We could set `running: true` inside the animation, but the width of the
+				// rectangle might not be calculated yet, due to the layout.
+				// In the `Component.onCompleted` event handler, all of the component's
+				// properties and children have been initialized.
+				Component.onCompleted: anim.start()
+			}
+
+			DropShadow {
+				id: shadow
+                anchors.fill: rect
+                horizontalOffset: 0
+                verticalOffset: 2
+                radius: 6
+                samples: radius * 2 + 1 // Ideally should be 2 * radius + 1, see qt docs
+                color: "#44000000"
+                source: rect
             }
-
-            ColumnLayout {
-                id: layout
-                spacing: 10
-                anchors {
-                    top: parent.top
-                    topMargin: verticalPadding
-                    horizontalCenter: parent.horizontalCenter
-                }
-
-                Text {
-                    renderType: Text.NativeRendering
-                    font.family: fontFamily
-                    font.pointSize: titleFontSize
-                    text: root.failed ? "Quickshell: Reload failed" : "Quickshell reloaded"
-                    color: root.failed ? errorText : successText
-                }
-
-                Text {
-                    id: errorText
-                    renderType: Text.NativeRendering
-                    font.family: fontFamily
-                    font.pointSize: messageFontSize
-                    text: root.errorString
-                    color: root.failed ? errorText : successText
-                    visible: root.errorString !== ""
-                    Layout.maximumWidth: 400
-                    wrapMode: Text.Wrap
-                }
-            }
-
-            Rectangle {
-                id: barBg
-                anchors {
-                    bottom: parent.bottom
-                    bottomMargin: barMargin
-                    horizontalCenter: parent.horizontalCenter
-                }
-                color: root.failed ? errorBarBg : successBarBg
-                height: barHeight
-                radius: 9999
-                width: rect.width - barMargin * 2
-                visible: root.showPopup
-            }
-
-            Rectangle {
-                id: bar
-                anchors {
-                    bottom: parent.bottom
-                    bottomMargin: barMargin
-                    left: barBg.left
-                }
-                color: root.failed ? errorBar : successBar
-                height: barHeight
-                radius: 9999
-                width: barBg.width
-                
-                PropertyAnimation {
-                    id: barAnimation
-                    target: bar
-                    property: "width"
-                    from: barBg.width
-                    to: 0
-                    duration: popupDuration
-                    running: root.showPopup && !mouseArea.containsMouse
-                    onFinished: {
-                        root.showPopup = false;
-                    }
-                }
-            }
-        }
-
-        DropShadow {
-            id: shadow
-            anchors.fill: rect
-            horizontalOffset: 0
-            verticalOffset: 2
-            radius: shadowRadius
-            samples: shadowRadius * 2 + 1
-            color: "#40000000"
-            source: rect
-        }
-    }
-
-    Timer {
-        id: hideTimer
-        interval: popupDuration
-        onTriggered: {
-            root.showPopup = false;
-        }
-    }
+		}
+	}
 }
