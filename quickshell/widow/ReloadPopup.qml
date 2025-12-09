@@ -1,50 +1,42 @@
-// Import Modules
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Wayland
-import qs.common as Common
 
-// Main Config
 Scope {
     id: root
     
-    // State properties
     property bool failed: false
     property string errorString: ""
     property bool showPopup: false
     
-    // Timing properties
     property int successDuration: 1000
     property int errorDuration: 10000
     property int popupDuration: failed ? errorDuration : successDuration
     
-    // Use theme colors
-    readonly property color successBg: Common.Appearance.colors.colSuccessContainer
-    readonly property color successText: Common.Appearance.colors.colOnSuccessContainer
+    // Hardcoded Black Widow colors
+    readonly property color successBg: "#2c1a0a"        // Dark brown
+    readonly property color successText: "#e6d5c3"      // Light cream
     readonly property color successBar: successText
-    readonly property color successBarBg: Common.Appearance.colors.colOutlineVariant
+    readonly property color successBarBg: "#4a433c"     // Dark brown
     
-    readonly property color errorBg: Common.Appearance.colors.colErrorContainer
-    readonly property color errorText: Common.Appearance.colors.colOnErrorContainer
+    readonly property color errorBg: "#410002"          // Very dark red
+    readonly property color errorText: "#ffdad6"        // Light pink
     readonly property color errorBar: errorText
-    readonly property color errorBarBg: Common.Appearance.colors.colOutlineVariant
+    readonly property color errorBarBg: "#4a433c"       // Dark brown
     
-    // Layout properties
     readonly property int horizontalPadding: 15
     readonly property int verticalPadding: 15
     readonly property int barHeight: 5
     readonly property int barMargin: 10
-    readonly property int borderRadius: Common.Appearance.rounding.small
+    readonly property int borderRadius: 12
     readonly property int shadowRadius: 8
     
-    // Font properties
-    readonly property string fontFamily: Common.Appearance.font.family.main
-    readonly property int titleFontSize: Common.Appearance.font.pixelSize.small
-    readonly property int messageFontSize: Common.Appearance.font.pixelSize.smaller
+    readonly property string fontFamily: "JetBrainsMono Nerd Font"
+    readonly property int titleFontSize: 14
+    readonly property int messageFontSize: 11
 
-    // Connect to the Quickshell global to listen for the reload signals.
     Connections {
         target: Quickshell
 
@@ -70,7 +62,6 @@ Scope {
         visible: root.showPopup
         exclusiveZone: 0
         
-        // Position at top center
         anchors.top: true
         implicitWidth: rect.width + shadow.radius * 2
         implicitHeight: rect.height + shadow.radius * 2
@@ -78,7 +69,7 @@ Scope {
 
         WlrLayershell.namespace: "quickshell:reloadPopup"
         WlrLayershell.layer: WlrLayershell.Layer.Top
-        WlrLayershell.anchors: Anchor.Top | Anchor.Horizontal
+        WlrLayershell.anchors: Quickshell.Wayland.WlrLayershell.Anchor.Top | Quickshell.Wayland.WlrLayershell.Anchor.Horizontal
         color: "transparent"
 
         Rectangle {
@@ -89,7 +80,6 @@ Scope {
             height: layout.height + verticalPadding * 2 + (barBg.visible ? barMargin + barHeight : 0)
             radius: borderRadius
 
-            // Makes the mouse area track mouse hovering
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
@@ -130,7 +120,6 @@ Scope {
                 }
             }
 
-            // Progress bar background
             Rectangle {
                 id: barBg
                 anchors {
@@ -145,7 +134,6 @@ Scope {
                 visible: root.showPopup
             }
 
-            // Animated progress bar
             Rectangle {
                 id: bar
                 anchors {
@@ -180,7 +168,7 @@ Scope {
             verticalOffset: 2
             radius: shadowRadius
             samples: shadowRadius * 2 + 1
-            color: Common.Appearance.colors.colShadow
+            color: "#40000000"
             source: rect
         }
     }
