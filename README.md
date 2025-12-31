@@ -37,3 +37,5 @@ My Hyprland config. Using quickshell for most widgets. It comes with an install 
 17) adw-gtk-theme 
 
 18) fontconfig
+
+19) Google Sans Flex
